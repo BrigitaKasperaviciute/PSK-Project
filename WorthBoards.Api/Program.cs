@@ -79,3 +79,6 @@ if (useHttpLoggingMiddleware)
 app.MapControllers();
 
 app.Run();
+
+// Expose Program for test host
+public partial class Program { }
