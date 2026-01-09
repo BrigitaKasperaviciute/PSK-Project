@@ -15,3 +15,6 @@ Client runs on `port 3000`.
 The back-end api is an `ASP.NET` project.
 To run the API, navigate to the `./WorthBoards.Api` folder and execute the `dotnet run` command.
 API runs on `port 5000`.
+
+## Run tests
+ dotnet test WorthBoards.Api.IntegrationTests/WorthBoards.Api.IntegrationTests.csproj
