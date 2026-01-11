@@ -79,3 +79,6 @@ if (useHttpLoggingMiddleware)
 app.MapControllers();
 
 app.Run();
+
+// Make Program class accessible to test project
+public partial class Program { }

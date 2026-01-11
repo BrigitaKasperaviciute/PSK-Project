@@ -15,3 +15,6 @@ Client runs on `port 3000`.
 The back-end api is an `ASP.NET` project.
 To run the API, navigate to the `./WorthBoards.Api` folder and execute the `dotnet run` command.
 API runs on `port 5000`.
+
+##  Run tests 20 times and calculate average
+.\run-tests-benchmark.ps1
