@@ -1,11 +1,24 @@
 # PowerShell script to run tests multiple times and calculate average execution time
 
 param(
-    [int]$Iterations = 20
+    [int]$Iterations = 20,
+    [switch]$SkipBuild = $false
 )
 
 Write-Host "Running tests $Iterations times..." -ForegroundColor Cyan
 Write-Host ""
+
+# Build once before running tests
+if (-not $SkipBuild) {
+    Write-Host "Building project..." -ForegroundColor Cyan
+    dotnet build --nologo --verbosity quiet 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Build failed!" -ForegroundColor Red
+        exit 1
+    }
+    Write-Host "Build successful!" -ForegroundColor Green
+    Write-Host ""
+}
 
 $totalDuration = 0.0
 $successfulRuns = 0
@@ -17,7 +30,8 @@ for ($i = 1; $i -le $Iterations; $i++) {
 
     # Run dotnet test and capture output with precise timing
     $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
-    $output = dotnet test --nologo --verbosity quiet 2>&1 | Out-String
+    $testArgs = if ($SkipBuild) { "--nologo --verbosity quiet" } else { "--nologo --verbosity quiet --no-build" }
+    $output = Invoke-Expression "dotnet test $testArgs 2>&1" | Out-String
     $stopwatch.Stop()
 
     # Use actual elapsed time in milliseconds for accuracy
