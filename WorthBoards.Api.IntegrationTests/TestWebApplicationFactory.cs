@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using WorthBoards.Data.Database;
+using WorthBoards.Data.Identity;
 
 namespace WorthBoards.Api.IntegrationTests;
 
@@ -63,6 +65,10 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>
             services.AddAuthentication(TestAuthHandler.AuthenticationScheme)
                 .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
                     TestAuthHandler.AuthenticationScheme, options => { });
+
+            // Replace password hasher with fast test version
+            services.RemoveAll<IPasswordHasher<ApplicationUser>>();
+            services.AddSingleton<IPasswordHasher<ApplicationUser>, TestPasswordHasher<ApplicationUser>>();
 
             // Remove the existing DbContext registration
             services.RemoveAll(typeof(DbContextOptions<ApplicationDbContext>));

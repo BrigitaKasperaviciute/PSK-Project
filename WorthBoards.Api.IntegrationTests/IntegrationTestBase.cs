@@ -8,7 +8,8 @@ using Xunit;
 
 namespace WorthBoards.Api.IntegrationTests;
 
-public abstract class IntegrationTestBase : IClassFixture<TestWebApplicationFactory>, IDisposable
+[Collection("Integration Tests")]
+public abstract class IntegrationTestBase : IDisposable, IAsyncLifetime
 {
     protected readonly TestWebApplicationFactory Factory;
     protected readonly HttpClient Client;
@@ -22,23 +23,32 @@ public abstract class IntegrationTestBase : IClassFixture<TestWebApplicationFact
         // Get a scoped DbContext for test operations
         var scope = Factory.Services.CreateScope();
         DbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-        // Clear the database before each test to ensure isolation
-        CleanDatabase();
     }
 
-    private void CleanDatabase()
+    public async Task InitializeAsync()
     {
-        // Remove all entities from the database
-        DbContext.Users.RemoveRange(DbContext.Users);
-        DbContext.Boards.RemoveRange(DbContext.Boards);
-        DbContext.BoardTasks.RemoveRange(DbContext.BoardTasks);
-        DbContext.Comments.RemoveRange(DbContext.Comments);
-        DbContext.Notifications.RemoveRange(DbContext.Notifications);
-        DbContext.NotificationsOnUsers.RemoveRange(DbContext.NotificationsOnUsers);
-        DbContext.BoardOnUsers.RemoveRange(DbContext.BoardOnUsers);
+        // Clear the database before each test to ensure isolation
+        await CleanDatabaseAsync();
+    }
+
+    public Task DisposeAsync() => Task.CompletedTask;
+
+    private async Task CleanDatabaseAsync()
+    {
+        // Ensure database is created
+        await DbContext.Database.EnsureCreatedAsync();
+
+        // Delete in order to respect foreign key constraints
         DbContext.TasksOnUsers.RemoveRange(DbContext.TasksOnUsers);
-        DbContext.SaveChanges();
+        DbContext.BoardOnUsers.RemoveRange(DbContext.BoardOnUsers);
+        DbContext.NotificationsOnUsers.RemoveRange(DbContext.NotificationsOnUsers);
+        DbContext.Comments.RemoveRange(DbContext.Comments);
+        DbContext.BoardTasks.RemoveRange(DbContext.BoardTasks);
+        DbContext.Boards.RemoveRange(DbContext.Boards);
+        DbContext.Notifications.RemoveRange(DbContext.Notifications);
+        DbContext.Users.RemoveRange(DbContext.Users);
+
+        await DbContext.SaveChangesAsync();
     }
 
     protected HttpClient CreateAuthenticatedClient(string userId = "1", string email = "test@example.com")
