@@ -15,7 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddBusinessServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAutoMapper(typeof(MappingProfile));
+            services.AddAutoMapper(cfg => { }, typeof(MappingProfile).Assembly);
 
             // TODO: Add global user roles
             //services.AddScoped<IClaimsTransformation, ClaimsTransformation>();
