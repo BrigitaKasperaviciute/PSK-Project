@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep *)",
+      "Bash(git -C \"/c/Users/03bri/Desktop/Bakalaurui PSK project\" log --oneline -20)",
+      "Bash(git -C \"/c/Users/03bri/Desktop/Bakalaurui PSK project\" remote -v)",
+      "Bash(dotnet build *)",
+      "Bash(dotnet test *)"
+    ]
+  }
+}

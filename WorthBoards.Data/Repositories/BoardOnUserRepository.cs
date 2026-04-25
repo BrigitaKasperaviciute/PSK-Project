@@ -50,9 +50,10 @@ namespace WorthBoards.Data.Repositories
 
         public async Task<List<ApplicationUser>> GetUsersByUserNameAsync(string userName, CancellationToken cancellationToken)
         {
+            var lowerName = userName.ToLower();
             var usersByUserNameQuery =
                 _dbContext.Users
-                .Where(u => EF.Functions.ILike(u.UserName, $"%{userName}%"));
+                .Where(u => u.UserName!.ToLower().Contains(lowerName));
 
             return await usersByUserNameQuery.ToListAsync(cancellationToken);
         }
