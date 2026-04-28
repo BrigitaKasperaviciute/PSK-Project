@@ -5,11 +5,13 @@ using WorthBoards.Common.Enums;
 
 namespace WorthBoards.Api.Utils
 {
-    public class PermissionHandler(IBoardService boardService) : AuthorizationHandler<PermissionRequirement>
+    public class PermissionHandler(IBoardService boardService, IHttpContextAccessor httpContextAccessor) : AuthorizationHandler<PermissionRequirement>
     {
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
         {
-            var httpContext = (context.Resource as DefaultHttpContext)?.HttpContext;
+            // In .NET 8 endpoint routing, context.Resource is the Endpoint, not HttpContext.
+            // IHttpContextAccessor is the reliable way to access the current HttpContext.
+            var httpContext = httpContextAccessor.HttpContext;
             var routeValues = httpContext?.Request.RouteValues;
 
             if (routeValues is null)
