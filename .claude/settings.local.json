@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Force)",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "PowerShell(cd \"c:\\\\Users\\\\03bri\\\\Desktop\\\\Bakalaurui PSK project\\\\WorthBoards.IntegrationTests\"; Get-ChildItem -Force | Where-Object {-not $_.Name.StartsWith\\(\"bin\"\\) -and -not $_.Name.StartsWith\\(\"obj\"\\)})",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\03bri\\\\Desktop\\\\Bakalaurui PSK project\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Read(//c/Users/03bri/.claude/projects/c--Users-03bri-Desktop-Bakalaurui-PSK-project/memory/**)",
+      "Bash(dotnet build *)",
+      "Bash(dotnet test *)",
+      "PowerShell($file = \"c:\\\\Users\\\\03bri\\\\Desktop\\\\Bakalaurui PSK project\\\\WorthBoards.IntegrationTests\\\\TestResults\\\\8bad23e6-0fd7-42b6-8a7f-2b232ecb809c\\\\coverage.cobertura.xml\"; [xml]$xml = Get-Content $file; $api = $xml.coverage.packages.package | Where-Object { $_.name -eq 'WorthBoards.Api' }; $api.classes.class | Select-Object name, 'line-rate' | Sort-Object 'line-rate' | Format-Table -AutoSize)"
+    ]
+  }
+}
