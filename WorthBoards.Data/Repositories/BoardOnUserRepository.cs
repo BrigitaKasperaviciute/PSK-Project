@@ -52,7 +52,7 @@ namespace WorthBoards.Data.Repositories
         {
             var usersByUserNameQuery =
                 _dbContext.Users
-                .Where(u => EF.Functions.ILike(u.UserName, $"%{userName}%"));
+                .Where(u => u.UserName.ToLower().Contains(userName.ToLower()));
 
             return await usersByUserNameQuery.ToListAsync(cancellationToken);
         }
