@@ -1,0 +1,11 @@
+global using System.Net;
+global using System.Net.Http.Json;
+global using FluentAssertions;
+global using Xunit;
+global using WorthBoards.Business.Dtos.Identity;
+global using WorthBoards.Business.Dtos.Requests;
+global using WorthBoards.Business.Dtos.Responses;
+global using WorthBoards.Common.Enums;
+global using WorthBoards.Domain.Entities;
+global using WorthBoards.IntegrationTests.Infrastructure;
+global using Microsoft.EntityFrameworkCore;
