@@ -50,6 +50,14 @@ namespace WorthBoards.Data.Repositories
 
         public async Task<List<ApplicationUser>> GetUsersByUserNameAsync(string userName, CancellationToken cancellationToken)
         {
+            var provider = _dbContext.Database.ProviderName ?? string.Empty;
+            if (provider.Contains("InMemory", StringComparison.OrdinalIgnoreCase))
+            {
+                return await _dbContext.Users
+                    .Where(u => u.UserName != null && u.UserName.Contains(userName, StringComparison.OrdinalIgnoreCase))
+                    .ToListAsync(cancellationToken);
+            }
+
             var usersByUserNameQuery =
                 _dbContext.Users
                 .Where(u => EF.Functions.ILike(u.UserName, $"%{userName}%"));
