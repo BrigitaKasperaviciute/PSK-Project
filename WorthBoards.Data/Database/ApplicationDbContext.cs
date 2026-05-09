@@ -5,9 +5,13 @@ using WorthBoards.Domain.Entities;
 
 namespace WorthBoards.Data.Database
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : IdentityDbContext<ApplicationUser, ApplicationRole, int>(options)
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>
     {
+        public ApplicationDbContext(DbContextOptions options)
+            : base(options)
+        {
+        }
+
         //DB Sets
         public DbSet<Board> Boards { get; set; }
         public DbSet<BoardOnUser> BoardOnUsers { get; set; }

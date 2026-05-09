@@ -49,6 +49,15 @@ namespace WorthBoards.Api.Configurations
                             await context.Response.WriteAsync(JsonSerializer.Serialize(response));
                         }
                     }
+                    ,
+                    OnChallenge = context =>
+                    {
+                        if (!context.Response.HasStarted)
+                            context.Response.StatusCode = 401;
+
+                        context.HandleResponse();
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

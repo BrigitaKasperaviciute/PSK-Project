@@ -15,7 +15,7 @@ namespace WorthBoards.Domain.Entities
         public required UserRoleEnum UserRole { get; set; }
 
         //Navigation properties
-        public virtual Board Board { get; set; }
+        public virtual Board Board { get; set; } = null!;
 
         // Concurrency token
         [Timestamp]

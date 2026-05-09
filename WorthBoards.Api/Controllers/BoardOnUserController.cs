@@ -55,7 +55,7 @@ namespace WorthBoards.Api.Controllers
         public async Task<IActionResult> LinkUserToBoard(int boardId, int userId, [FromBody] LinkUserToBoardRequest linkUserToBoardRequest, CancellationToken cancellationToken)
         {
             var linkResponse = await _boardOnUserService.LinkUserToBoard(boardId, userId, linkUserToBoardRequest, cancellationToken);
-            return CreatedAtAction(nameof(LinkUserToBoard), new { boardId = linkResponse.BoardId, userId = linkResponse.UserId }, linkResponse);
+            return CreatedAtAction(nameof(LinkUserToBoard), new { boardId = linkResponse.BoardId, userId = linkResponse.Id }, linkResponse);
         }
 
         [HttpPut("{boardId}/link/{userId}")]

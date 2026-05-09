@@ -18,9 +18,9 @@ namespace WorthBoards.Domain.Entities
         public required TaskStatusEnum TaskStatus { get; set; }
 
         //Navigation properties
-        public virtual Board Board { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<TaskOnUser> TasksOnUsers { get; set; }
+        public virtual Board Board { get; set; } = null!;
+        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public virtual ICollection<TaskOnUser> TasksOnUsers { get; set; } = new List<TaskOnUser>();
 
         // Concurrency token
         [Timestamp]

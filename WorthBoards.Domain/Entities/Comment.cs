@@ -15,7 +15,7 @@ namespace WorthBoards.Domain.Entities
         public required bool Edited { get; set; } = false;
 
         //Navigation properties
-        public virtual BoardTask BoardTask { get; set; }
+        public virtual BoardTask BoardTask { get; set; } = null!;
 
         // Concurrency token
         [Timestamp]

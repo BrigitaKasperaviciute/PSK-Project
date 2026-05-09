@@ -16,8 +16,8 @@ namespace WorthBoards.Domain.Entities
         public DateTime CreationDate { get; set; }
 
         //Navigation properties
-        public virtual ICollection<BoardTask> BoardTasks { get; set; }
-        public virtual ICollection<BoardOnUser> BoardOnUsers { get; set; }
+        public virtual ICollection<BoardTask> BoardTasks { get; set; } = new List<BoardTask>();
+        public virtual ICollection<BoardOnUser> BoardOnUsers { get; set; } = new List<BoardOnUser>();
 
         // Concurrency token
         [Timestamp]

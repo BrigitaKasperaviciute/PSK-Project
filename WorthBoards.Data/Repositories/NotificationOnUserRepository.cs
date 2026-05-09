@@ -33,7 +33,8 @@ namespace WorthBoards.Data.Repositories
             notification.NotificationsOnUsers = userIds.Select(userId => new NotificationOnUser()
             {
                 NotificationId = notification.Id,
-                UserId = userId
+                UserId = userId,
+                Notification = notification
             }).ToList();
         }
     }

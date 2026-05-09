@@ -26,6 +26,12 @@ namespace WorthBoards.Api.Controllers
         [HttpPost("/login")]
         public async Task<IActionResult> LoginUserAsync([FromBody] UserLoginRequest credentials, CancellationToken cancellationToken)
         {
+            // Validate input
+            if (string.IsNullOrWhiteSpace(credentials.UserName))
+                return BadRequest("Username is required.");
+            if (string.IsNullOrWhiteSpace(credentials.Password))
+                return BadRequest("Password is required.");
+
             try
             {
                 var response = await authService.LoginUserAsync(credentials, cancellationToken);
@@ -70,9 +76,23 @@ namespace WorthBoards.Api.Controllers
             var email = User.FindFirstValue(ClaimTypes.Email)
                 ?? throw new UnauthorizedAccessException(ErrorMessageConstants.EMAIL_NOT_FOUND_IN_TOKEN);
 
-            var response = await authService.ChangePasswordAsync(changePasswordRequest, email, cancellationToken);
+            // Validate that old and new passwords are different
+            if (changePasswordRequest.OldPassword == changePasswordRequest.NewPassword)
+                return BadRequest("New password must be different from old password.");
 
-            return Ok(response);
+            try
+            {
+                var response = await authService.ChangePasswordAsync(changePasswordRequest, email, cancellationToken);
+                return Ok(response);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return Problem();
+            }
         }
     }
 }

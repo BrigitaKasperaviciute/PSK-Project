@@ -9,6 +9,11 @@ class FileUploadValidator
 {
     public static void ValidateImage(IFormFile file)
     {
+        if (file.Length == 0)
+        {
+            throw new BadRequestException("Image file cannot be empty");
+        }
+
         if (file.Length > ImageFiles.IMAGE_MAX_SIZE)
         {
             throw new BadRequestException($"Images cannot exceed {ImageFiles.IMAGE_MAX_SIZE / 10} megabytes");

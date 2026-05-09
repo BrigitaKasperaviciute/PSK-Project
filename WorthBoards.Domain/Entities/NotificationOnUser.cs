@@ -11,6 +11,6 @@ namespace WorthBoards.Domain.Entities
         public int UserId { get; set; }
 
         //Navigation properties
-        public virtual Notification Notification { get; set; }
+        public virtual Notification Notification { get; set; } = null!;
     }
 }

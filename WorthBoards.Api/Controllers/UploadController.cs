@@ -13,6 +13,9 @@ public class UploadController(IFileService _fileService) : ControllerBase
     [Authorize]
     public async Task<IActionResult> UploadImage(IFormFile image, CancellationToken cancellationToken)
     {
+        if (image is null)
+            return BadRequest();
+
         int userId = UserHelper.GetUserId(User).Value;
         Console.WriteLine($"{userId}, Uploaded image: {image.FileName}");
         var filename = await _fileService.UploadImage(image);

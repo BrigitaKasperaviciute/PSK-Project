@@ -73,10 +73,12 @@ namespace WorthBoards.Business.AutoMapper
 
             //BoardOnUser
             CreateMap<BoardOnUser, LinkUserToBoardResponse>();
-            CreateMap<LinkUserToBoardRequest, BoardOnUser>();
+            CreateMap<LinkUserToBoardRequest, BoardOnUser>()
+                .ForMember(dest => dest.UserRole, opt => opt.MapFrom(src => src.UserRole));
 
             //LinkedUserToBoardResponse
             CreateMap<Tuple<BoardOnUser, ApplicationUser>, LinkedUserToBoardResponse>()
+                .ForMember(dest => dest.BoardId, opt => opt.MapFrom(src => src.Item1.BoardId))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Item2.Id))
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Item2.UserName))
                 .ForMember(dest => dest.ImageURL, opt => opt.MapFrom(src => ImageFiles.GetFormattedImageUrl(src.Item2.ImageName)))

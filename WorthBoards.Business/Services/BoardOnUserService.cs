@@ -16,22 +16,39 @@ namespace WorthBoards.Business.Services
 {
     public class BoardOnUserService(IUnitOfWork _unitOfWork, IMapper _mapper, INotificationService _notificationService) : IBoardOnUserService
     {
-        public async Task<IEnumerable<LinkUserToBoardResponse>> GetAllBoardToUserLinks(int boardId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<LinkedUserToBoardResponse>> GetAllBoardToUserLinks(int boardId, CancellationToken cancellationToken)
         {
             var boardToUserLinks = await _unitOfWork.BoardOnUserRepository.GetAllByExpressionAsync(b => b.BoardId == boardId, cancellationToken);
+            var userIds = boardToUserLinks.Select(b => b.UserId).ToList();
+            var users = await _unitOfWork.UserRepository.GetAllByExpressionAsync(u => userIds.Contains(u.Id), cancellationToken);
 
-            return _mapper.Map<IEnumerable<LinkUserToBoardResponse>>(boardToUserLinks);
+            var result = new List<LinkedUserToBoardResponse>();
+            foreach (var link in boardToUserLinks)
+            {
+                var user = users.FirstOrDefault(u => u.Id == link.UserId);
+                if (user != null)
+                {
+                    var tuple = Tuple.Create(link, user);
+                    var mapped = _mapper.Map<LinkedUserToBoardResponse>(tuple);
+                    result.Add(mapped);
+                }
+            }
+            return result;
         }
 
-        public async Task<LinkUserToBoardResponse> GetBoardToUserLink(int boardId, int userId, CancellationToken cancellationToken)
+        public async Task<LinkedUserToBoardResponse> GetBoardToUserLink(int boardId, int userId, CancellationToken cancellationToken)
         {
             var boardToUserLink = await _unitOfWork.BoardOnUserRepository.GetByExpressionAsync(b => b.BoardId == boardId && b.UserId == userId, cancellationToken)
                 ?? throw new NotFoundException(ExceptionFormatter.NotFound(nameof(BoardOnUser), [boardId, userId]));
 
-            return _mapper.Map<LinkUserToBoardResponse>(boardToUserLink);
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId, cancellationToken)
+                ?? throw new NotFoundException(ExceptionFormatter.NotFound(nameof(ApplicationUser), [userId]));
+
+            var tuple = Tuple.Create(boardToUserLink, user);
+            return _mapper.Map<LinkedUserToBoardResponse>(tuple);
         }
 
-        public async Task<LinkUserToBoardResponse> LinkUserToBoard(int boardId, int userId, LinkUserToBoardRequest linkUserToBoardRequest, CancellationToken cancellationToken)
+        public async Task<LinkedUserToBoardResponse> LinkUserToBoard(int boardId, int userId, LinkUserToBoardRequest linkUserToBoardRequest, CancellationToken cancellationToken)
         {
             //In the future check if user has invitation before allowing to link
             var responsibleUser = await _unitOfWork.BoardOnUserRepository.GetByExpressionAsync(bou => bou.UserId == userId && bou.BoardId == boardId && bou.UserRole == UserRoleEnum.OWNER, cancellationToken);
@@ -44,7 +61,11 @@ namespace WorthBoards.Business.Services
             await _unitOfWork.BoardOnUserRepository.CreateAsync(boardOnUser, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return _mapper.Map<LinkUserToBoardResponse>(boardOnUser); 
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId, cancellationToken)
+                ?? throw new NotFoundException(ExceptionFormatter.NotFound(nameof(ApplicationUser), [userId]));
+
+            var tuple = Tuple.Create(boardOnUser, user);
+            return _mapper.Map<LinkedUserToBoardResponse>(tuple);
         }
 
         public async Task UnlinkUserFromBoard(int boardId, int userId, int responsibleUserId, CancellationToken cancellationToken)
@@ -65,17 +86,22 @@ namespace WorthBoards.Business.Services
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<LinkUserToBoardResponse> UpdateUserOnBoard(int boardId, int userId, LinkUserToBoardRequest linkUserToBoardRequest, CancellationToken cancellationToken)
+        public async Task<LinkedUserToBoardResponse> UpdateUserOnBoard(int boardId, int userId, LinkUserToBoardRequest linkUserToBoardRequest, CancellationToken cancellationToken)
         {
             var boardOnUserToUpdate = await _unitOfWork.BoardOnUserRepository.GetByExpressionAsync(b => b.BoardId == boardId && b.UserId == userId, cancellationToken)
                 ?? throw new NotFoundException(ExceptionFormatter.NotFound(nameof(BoardOnUser), [boardId, userId]));
 
-            _mapper.Map(linkUserToBoardRequest,boardOnUserToUpdate);
+            _mapper.Map(linkUserToBoardRequest, boardOnUserToUpdate);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return _mapper.Map<LinkUserToBoardResponse>(boardOnUserToUpdate);
+
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId, cancellationToken)
+                ?? throw new NotFoundException(ExceptionFormatter.NotFound(nameof(ApplicationUser), [userId]));
+
+            var tuple = Tuple.Create(boardOnUserToUpdate, user);
+            return _mapper.Map<LinkedUserToBoardResponse>(tuple);
         }
 
-        public async Task<LinkUserToBoardResponse> PatchUserOnBoard(int boardId, int userId, JsonPatchDocument<LinkUserToBoardRequest> linkUserToBoardPatchDoc, CancellationToken cancellationToken)
+        public async Task<LinkedUserToBoardResponse> PatchUserOnBoard(int boardId, int userId, JsonPatchDocument<LinkUserToBoardRequest> linkUserToBoardPatchDoc, CancellationToken cancellationToken)
         {
             var boardTaskToPatch = await _unitOfWork.BoardOnUserRepository.GetByExpressionAsync(b => b.BoardId == boardId && b.UserId == userId && b.UserRole != UserRoleEnum.OWNER, cancellationToken)
                 ?? throw new BadRequestException(ExceptionFormatter.NotFound(nameof(BoardOnUser), [boardId, userId]));
@@ -86,7 +112,12 @@ namespace WorthBoards.Business.Services
             _mapper.Map(boardTaskToPatchDto, boardTaskToPatch);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return _mapper.Map<LinkUserToBoardResponse>(boardTaskToPatch);
+
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId, cancellationToken)
+                ?? throw new NotFoundException(ExceptionFormatter.NotFound(nameof(ApplicationUser), [userId]));
+
+            var tuple = Tuple.Create(boardTaskToPatch, user);
+            return _mapper.Map<LinkedUserToBoardResponse>(tuple);
         }
 
         public async Task<IEnumerable<LinkedUserToBoardResponse>> GetUsersLinkedToBoardAsync(int boardId, CancellationToken cancellationToken)

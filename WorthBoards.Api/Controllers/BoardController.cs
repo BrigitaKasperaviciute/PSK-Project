@@ -36,6 +36,16 @@ namespace WorthBoards.Api.Controllers
         [Authorize]
         public async Task<IActionResult> GetBoardById(int boardId, CancellationToken cancellationToken)
         {
+            var userId = UserHelper.GetUserId(User).Value;
+            try
+            {
+                await _boardOnUserService.GetBoardToUserLink(boardId, userId, cancellationToken);
+            }
+            catch
+            {
+                return Forbid();
+            }
+
             var boardResponse = await _boardService.GetBoardByIdAsync(boardId, cancellationToken);
             return Ok(boardResponse);
         }
