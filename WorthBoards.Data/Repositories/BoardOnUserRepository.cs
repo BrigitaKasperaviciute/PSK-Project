@@ -50,9 +50,19 @@ namespace WorthBoards.Data.Repositories
 
         public async Task<List<ApplicationUser>> GetUsersByUserNameAsync(string userName, CancellationToken cancellationToken)
         {
-            var usersByUserNameQuery =
-                _dbContext.Users
-                .Where(u => EF.Functions.ILike(u.UserName, $"%{userName}%"));
+            IQueryable<ApplicationUser> usersByUserNameQuery;
+
+            if (_dbContext.Database.IsNpgsql())
+            {
+                usersByUserNameQuery = _dbContext.Users
+                    .Where(u => EF.Functions.ILike(u.UserName, $"%{userName}%"));
+            }
+            else
+            {
+                var normalizedUserName = userName.ToLowerInvariant();
+                usersByUserNameQuery = _dbContext.Users
+                    .Where(u => u.UserName != null && u.UserName.ToLower().Contains(normalizedUserName));
+            }
 
             return await usersByUserNameQuery.ToListAsync(cancellationToken);
         }
