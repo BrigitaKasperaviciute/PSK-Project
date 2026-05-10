@@ -1,0 +1,90 @@
+Integration tests 20 runs results
+Pre-building once so benchmark runs test execution only...
+Running tests 20 time(s)...
+
+Run 1/20
+Run 1 test count: 93 | Average per test this run: 0.4391 s
+Run 1 completed in 40.834 s
+
+Run 2/20
+Run 2 test count: 93 | Average per test this run: 0.4819 s
+Run 2 completed in 44.814 s
+
+Run 3/20
+Run 3 test count: 93 | Average per test this run: 0.3748 s
+Run 3 completed in 34.855 s
+
+Run 4/20
+Run 4 test count: 93 | Average per test this run: 0.4279 s
+Run 4 completed in 39.798 s
+
+Run 5/20
+Run 5 test count: 93 | Average per test this run: 0.5261 s
+Run 5 completed in 48.927 s
+
+Run 6/20
+Run 6 test count: 93 | Average per test this run: 0.4419 s
+Run 6 completed in 41.095 s
+
+Run 7/20
+Run 7 test count: 93 | Average per test this run: 0.3881 s
+Run 7 completed in 36.091 s
+
+Run 8/20
+Run 8 test count: 93 | Average per test this run: 0.4494 s
+Run 8 completed in 41.792 s
+
+Run 9/20
+Run 9 test count: 93 | Average per test this run: 0.5882 s
+Run 9 completed in 54.702 s
+
+Run 10/20
+Run 10 test count: 93 | Average per test this run: 0.389 s
+Run 10 completed in 36.18 s
+
+Run 11/20
+Run 11 test count: 93 | Average per test this run: 0.3063 s
+Run 11 completed in 28.483 s
+
+Run 12/20
+Run 12 test count: 93 | Average per test this run: 0.3954 s
+Run 12 completed in 36.776 s
+
+Run 13/20
+Run 13 test count: 93 | Average per test this run: 0.3581 s
+Run 13 completed in 33.304 s
+
+Run 14/20
+Run 14 test count: 93 | Average per test this run: 0.4944 s
+Run 14 completed in 45.976 s
+
+Run 15/20
+Run 15 test count: 93 | Average per test this run: 0.4726 s
+Run 15 completed in 43.95 s
+
+Run 16/20
+Run 16 test count: 93 | Average per test this run: 0.3626 s
+Run 16 completed in 33.719 s
+
+Run 17/20
+Run 17 test count: 93 | Average per test this run: 0.362 s
+Run 17 completed in 33.665 s
+
+Run 18/20
+Run 18 test count: 93 | Average per test this run: 0.3441 s
+Run 18 completed in 32.003 s
+
+Run 19/20
+Run 19 test count: 93 | Average per test this run: 0.5145 s
+Run 19 completed in 47.853 s
+
+Run 20/20
+Run 20 test count: 93 | Average per test this run: 0.4601 s
+Run 20 completed in 42.793 s
+
+Benchmark summary
+- Iterations: 20
+- Average runtime: 39.881 s
+- Min runtime: 28.483 s
+- Max runtime: 54.702 s
+- Average runtime of 1 integration test: 0.4288 s
