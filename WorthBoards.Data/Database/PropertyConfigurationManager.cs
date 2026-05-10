@@ -7,18 +7,22 @@ static class PropertyConfigurationManager {
     public static void AddConcurrencyTokens(ModelBuilder builder) {
         builder.Entity<Board>()
             .Property(b => b.Version)
-            .IsRowVersion();
+            .ValueGeneratedNever()
+            .IsConcurrencyToken();
 
         builder.Entity<BoardOnUser>()
             .Property(bou => bou.Version)
-            .IsRowVersion();
+            .ValueGeneratedNever()
+            .IsConcurrencyToken();
 
         builder.Entity<BoardTask>()
             .Property(t => t.Version)
-            .IsRowVersion();
+            .ValueGeneratedNever()
+            .IsConcurrencyToken();
 
         builder.Entity<Comment>()
             .Property(c => c.Version)
-            .IsRowVersion();
+            .ValueGeneratedNever()
+            .IsConcurrencyToken();
     }
 }

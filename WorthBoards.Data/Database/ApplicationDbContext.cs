@@ -19,9 +19,9 @@ namespace WorthBoards.Data.Database
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            PropertyConfigurationManager.AddConcurrencyTokens(builder);
-            Linker.LinkAll(builder);
             base.OnModelCreating(builder);
+            Linker.LinkAll(builder);
+            PropertyConfigurationManager.AddConcurrencyTokens(builder);
         }
     }
 }

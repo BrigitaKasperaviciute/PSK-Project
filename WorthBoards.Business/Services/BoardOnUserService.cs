@@ -37,6 +37,10 @@ namespace WorthBoards.Business.Services
             var responsibleUser = await _unitOfWork.BoardOnUserRepository.GetByExpressionAsync(bou => bou.UserId == userId && bou.BoardId == boardId && bou.UserRole == UserRoleEnum.OWNER, cancellationToken);
             if (responsibleUser != null) throw new BadRequestException(ExceptionFormatter.NotFound(nameof(responsibleUser), [userId]));
 
+            var existingLink = await _unitOfWork.BoardOnUserRepository.GetByExpressionAsync(bou => bou.UserId == userId && bou.BoardId == boardId, cancellationToken);
+            if (existingLink != null)
+                throw new BadRequestException($"User {userId} is already linked to board {boardId}.");
+
             var boardOnUser = _mapper.Map<BoardOnUser>(linkUserToBoardRequest);
             boardOnUser.BoardId = boardId;
             boardOnUser.UserId = userId;
