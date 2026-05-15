@@ -79,3 +79,6 @@ if (useHttpLoggingMiddleware)
 app.MapControllers();
 
 app.Run();
+
+// Expose Program to the integration-test project
+public partial class Program { }
